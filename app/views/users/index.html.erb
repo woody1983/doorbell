@@ -1,0 +1,41 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Admin</th>
+    <th>Password digest</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.name %></td>
+    <td><%= user.email %></td>
+    <td><%= user.admin %></td>
+    <td><%= user.password_digest %></td>
+    <td><%= link_to 'Show', user %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+<%= link_to 'New User', new_user_path %>
+
+<ul>
+<li><%= session[:current_user_id]  =%></li>
+<li><%= session[:current_user_name]  =%></li>
+<li><%= session[:current_user_email]  =%></li>
+<% unless current_user.nil? %>
+<li>Current: <%= current_user.name =%></li>
+<li>Current: <%= current_user.id =%></li>
+<% end %>
+</ul>
+
+ <%= link_to "Sign out", signout_path, method: "delete" %>
+ <%= link_to "Sign in", signin_path %>
