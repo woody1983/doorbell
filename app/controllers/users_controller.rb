@@ -44,9 +44,10 @@ before_filter :admin_user, only: :destroy
   # POST /users.json
   def create
     @user = User.new(params[:user])
-
     respond_to do |format|
       if @user.save
+        sign_in @user
+        flash[:success] = "Welcome to the Sample App!"
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user, status: :created, location: @user }
       else
@@ -62,12 +63,16 @@ before_filter :admin_user, only: :destroy
     @user = User.find(params[:id])
 
     respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :no_content }
+      if current_user.admin?
+        @user.update_attributes(:name => params[:name])
       else
-        format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        if @user.update_attributes(params[:user])
+          format.html { redirect_to @user, notice: 'User was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: "edit" }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -92,7 +97,7 @@ private
 
   def correct_user
     @user = User.find(params[:id])
-    redirect_to(users_path) unless current_user?(@user) #and current_user.admin?    
+    redirect_to(users_path) unless current_user?(@user) || current_user.admin?    
   end
 
   def admin_user #非admin 直接转回首页
