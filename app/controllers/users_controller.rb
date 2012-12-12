@@ -64,7 +64,14 @@ before_filter :admin_user, only: :destroy
 
     respond_to do |format|
       if current_user.admin?
-        @user.update_attributes(:name => params[:name])
+          @user.attributes = (params[:user]) #绕开验证
+          if @user.save( :validate => false )
+          format.html { redirect_to @user, notice: 'User was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: "edit" }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
       else
         if @user.update_attributes(params[:user])
           format.html { redirect_to @user, notice: 'User was successfully updated.' }
