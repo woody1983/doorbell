@@ -8,12 +8,26 @@ gem 'faker', '1.0.1' #Sample User
 gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 gem 'yaml_db'
-gem 'rspec-rails', '2.10.0'
+#gem 'rspec-rails', '2.10.0'
 gem 'annotate', '2.5.0', group: :development
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+group :development, :test do
+  gem 'sqlite3', '1.3.5'
+  gem 'rspec-rails', '2.10.0'
+  gem 'guard-rspec', '1.2.1'
+  gem 'guard-spork', '1.2.0'
+  gem 'spork', '0.9.2'
+end
+
+
+# Test gems on Linux
+group :test do
+  gem 'capybara', '1.1.2'
+  gem 'rb-inotify', '0.8.8'
+  gem 'libnotify', '0.5.9'
+end
 
 
 # Gems used only for assets and not required
